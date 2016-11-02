@@ -9,6 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": "git@github.com:nodebotanist/node-bus-pirate.git",
   "dependencies": {
     "serialport": "^4.0.3"
   }
