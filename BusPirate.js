@@ -20,7 +20,7 @@ function BusPirate(options){
   this.port.on('data', function (data){
     data = Buffer.from(data).toString()
     console.log(data)
-    if(data == 'BBIO1'){
+    if(data.indexOf('BBIO1') !== -1){
       this.ready()
     }
   }.bind(this))
@@ -28,10 +28,11 @@ function BusPirate(options){
 
 util.inherits(BusPirate, EventEmitter)
 
+Object.assign(BusPirate.prototype, i2c)
+
 BusPirate.prototype.reset = function(){
   console.log('resetting')
   this.port.write([0x0F])
-  this.port.open(()=>{ this.emit('open')})
 }
 
 BusPirate.prototype.start = function(){
@@ -46,6 +47,5 @@ BusPirate.prototype.ready = function(){
   }
 }
 
-Object.assign(BusPirate.prototype, i2c)
 
 module.exports = BusPirate

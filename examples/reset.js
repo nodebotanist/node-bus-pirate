@@ -1,7 +1,7 @@
 var BusPirate = require('../BusPirate')
 
 var busPirate = new BusPirate({
-  port: '/dev/tty.usbserial-AI03KY7Z'
+  port: '/dev/tty.usbmodem00000001'
 })
 
 let reset = false
