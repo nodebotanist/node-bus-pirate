@@ -9,12 +9,10 @@ busPirate.on('open', () => {
 });
 
 busPirate.on('ready', () => {
-  console.log(busPirate);
   busPirate.uartInit();
-  busPirate.uartSetSpeed(9600);
-  // Configuration is all defaults, so it would not be required.
+  busPirate.uartSetSpeed(1200);
   busPirate.uartConfig({
-    pinOutput: "HiZ",
+    pinOutput: "3V3",
     databitsParity: "8/N",
     stopBits: 1,
     polarity: "idleHigh"
@@ -23,6 +21,7 @@ busPirate.on('ready', () => {
     power: true
   });
   busPirate.uartSetRxEcho(true);
+  busPirate.uartWrite(Buffer.from("12345"));
 });
 
 process.on('SIGINT', function(){
