@@ -6,12 +6,16 @@ Don't know what that is? [Check it out](http://dangerousprototypes.com/docs/Bus_
 
 I'm testing this with the v3.6 and the v4 and Node 7.x
 
-Currently working
-
+## Currently working
+### General
+```
 .start()
 .reset()
 'ready' event
+```
 
+### I2C
+```
 i2cInit()
 i2cConfig({
   power: true,
@@ -20,6 +24,27 @@ i2cConfig({
   cs: true
 })
 i2cWrite(address, bytesArray)
+```
+
+### UART
+```
+busPirate.uartInit();
+busPirate.uartSetSpeed(9600);
+busPirate.uartConfig({
+  pinOutput: "HiZ",
+  databitsParity: "8/N",
+  stopBits: 1,
+  polarity: "idleHigh"
+});
+busPirate.uartSetPeripherals({
+  power: true,
+  pullups: false,
+  aux: false,
+  cs: false
+});
+busPirate.uartSetRxEcho(true);
+busPirate.uartWrite(["abcd"]);
+```
 
 ## Roadmap
 
@@ -28,4 +53,4 @@ i2cWrite(address, bytesArray)
 * Docs (self-generating) [DONE]
 * Finish I2C imlementation
 
-Thanks to node-serialport for making this all possible <3 
+Thanks to node-serialport for making this all possible <3
