@@ -4,7 +4,8 @@
   "description": "",
   "main": "BusPirate.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "exampleUart": "node --use_strict examples/uart.js"
   },
   "keywords": [],
   "author": "",
