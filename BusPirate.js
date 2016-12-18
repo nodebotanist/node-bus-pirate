@@ -3,6 +3,7 @@ const EventEmitter = require('events').EventEmitter
 const SerialPort = require('serialport')
 
 const i2c = require('./lib/i2c.js')
+const uart = require('./lib/uart.js')
 
 function BusPirate(options){
   EventEmitter.call(this)
@@ -29,6 +30,7 @@ function BusPirate(options){
 util.inherits(BusPirate, EventEmitter)
 
 Object.assign(BusPirate.prototype, i2c)
+Object.assign(BusPirate.prototype, uart)
 
 BusPirate.prototype.reset = function(){
   console.log('resetting')
