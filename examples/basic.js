@@ -14,7 +14,7 @@ busPirate.on('ready', () => {
             power: true
         }, () => {
             console.log('writing')
-            busPirate.i2cWrite(0x7e, [0x1e, 0x40])
+            busPirate.i2cWrite(0x52, [0x8F, 0x01])
         });
     })
 })
