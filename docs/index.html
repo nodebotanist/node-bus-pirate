@@ -81,6 +81,31 @@
 
 
 
+    <section class="readme-section">
+        <article><h1>bus-pirate</h1><p>Control a Bus Pirate with Node!</p>
+<p>Don't know what that is? <a href="http://dangerousprototypes.com/docs/Bus_Pirate">Check it out</a></p>
+<p>I'm testing this with the v3.6 and the v4 and Node 7.x</p>
+<p>Currently working</p>
+<p>.start()
+.reset()
+'ready' event</p>
+<p>i2cInit()
+i2cConfig({
+  power: true,
+  pullups: true,
+  aux: true,
+  cs: true
+})
+i2cWrite(address, bytesArray)</p>
+<h2>Roadmap</h2><ul>
+<li>Major refactor w/async [DONE]</li>
+<li>Find a way to add unit testing</li>
+<li>Docs (self-generating) [DONE]</li>
+<li>Finish I2C imlementation</li>
+</ul>
+<p>Thanks to node-serialport for making this all possible &lt;3 </p></article>
+    </section>
+
 
 
 
