@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate.html">BusPirate</a></li><li><a href="module-BusPirate_i2c.html">BusPirate/i2c</a></li>
+					<li><a href="module-BusPirate.html">BusPirate</a></li><li><a href="module-BusPirate_i2c.html">BusPirate/i2c</a></li><li><a href="module-BusPirate_uart.html">BusPirate/uart</a></li>
 				</ul>
 			</li>
 			
@@ -85,25 +85,37 @@
         <article><h1>bus-pirate</h1><p>Control a Bus Pirate with Node!</p>
 <p>Don't know what that is? <a href="http://dangerousprototypes.com/docs/Bus_Pirate">Check it out</a></p>
 <p>I'm testing this with the v3.6 and the v4 and Node 7.x</p>
-<p>Currently working</p>
-<p>.start()
+<h2>Currently working</h2><h3>General</h3><pre class="prettyprint source"><code>.start()
 .reset()
-'ready' event</p>
-<p>i2cInit()
+'ready' event</code></pre><h3>I2C</h3><pre class="prettyprint source"><code>i2cInit()
 i2cConfig({
   power: true,
   pullups: true,
   aux: true,
   cs: true
 })
-i2cWrite(address, bytesArray)</p>
-<h2>Roadmap</h2><ul>
+i2cWrite(address, bytesArray)</code></pre><h3>UART</h3><pre class="prettyprint source"><code>busPirate.uartInit();
+busPirate.uartSetSpeed(9600);
+busPirate.uartConfig({
+  pinOutput: &quot;HiZ&quot;,
+  databitsParity: &quot;8/N&quot;,
+  stopBits: 1,
+  polarity: &quot;idleHigh&quot;
+});
+busPirate.uartSetPeripherals({
+  power: true,
+  pullups: false,
+  aux: false,
+  cs: false
+});
+busPirate.uartSetRxEcho(true);
+busPirate.uartWrite([&quot;abcd&quot;]);</code></pre><h2>Roadmap</h2><ul>
 <li>Major refactor w/async [DONE]</li>
 <li>Find a way to add unit testing</li>
 <li>Docs (self-generating) [DONE]</li>
 <li>Finish I2C imlementation</li>
 </ul>
-<p>Thanks to node-serialport for making this all possible &lt;3 </p></article>
+<p>Thanks to node-serialport for making this all possible &lt;3</p></article>
     </section>
 
 

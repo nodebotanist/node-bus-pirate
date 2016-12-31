@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate.html">BusPirate</a></li><li><a href="module-BusPirate_i2c.html">BusPirate/i2c</a></li>
+					<li><a href="module-BusPirate.html">BusPirate</a></li><li><a href="module-BusPirate_i2c.html">BusPirate/i2c</a></li><li><a href="module-BusPirate_uart.html">BusPirate/uart</a></li>
 				</ul>
 			</li>
 			
@@ -103,7 +103,7 @@ i2c.i2cInit = function(callback) {
 
                     /**
                      * I2C_ready event - signals that the BusPirate is ready for I2C commands
-                     * 
+                     *
                      * @event I2C_ready
                      */
                     this.emit('I2C_ready')
@@ -114,7 +114,7 @@ i2c.i2cInit = function(callback) {
         },
         /**
          * This is called when I2C is ready
-         * 
+         *
          * @callback I2cInitCallback
          * @param {Error} error - null if sucessful
          */
@@ -169,7 +169,7 @@ i2c.i2cConfig = function(opts, callback) {
         },
         /**
          * This is called when I2C config is complete or has failed
-         * 
+         *
          * @callback I2cConfigCallback
          * @param {Error} error - null if sucessful
          */
@@ -234,7 +234,7 @@ i2c.i2cWrite = function(register, bytes, callback) {
                 },
                 /**
                  * Called when the I2C write finishes or errors
-                 * 
+                 *
                  * @callback I2cWriteCallback
                  * @param {Error} error - null if sucessful
                  */
@@ -245,7 +245,8 @@ i2c.i2cWrite = function(register, bytes, callback) {
 }
 
 
-module.exports = i2c</pre>
+module.exports = i2c
+</pre>
     </article>
 </section>
 

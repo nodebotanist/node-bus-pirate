@@ -4,8 +4,9 @@ const SerialPort = require('serialport')
 const async = require('async')
 
 const i2c = require('./lib/i2c.js')
+const uart = require('./lib/uart.js')
 
-/** 
+/**
  * Main BusPirate module
  * @module BusPirate
  * @author nodebotanist
@@ -48,6 +49,9 @@ util.inherits(BusPirate, EventEmitter)
 // Add in the I2C module
 Object.assign(BusPirate.prototype, i2c)
 
+// Add in the UART module
+Object.assign(BusPirate.prototype, uart)
+
 /**
  * Sends a reset code to the bus pirate
  * @method reset
@@ -78,7 +82,7 @@ BusPirate.prototype.start = function() {
                     this._ready = true
                         /**
                          * Ready event -- signals the bus pirate is ready to recieve commands
-                         * 
+                         *
                          * @event ready
                          */
                     this.emit('ready')
