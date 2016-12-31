@@ -1,10 +1,11 @@
 {
     "name": "bus-pirate",
-    "version": "0.2.0",
+    "version": "0.2.01",
     "description": "",
     "main": "BusPirate.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "gen_docs": "./node_modules/.bin/jsdoc -c conf.json"
     },
     "keywords": [],
     "author": "",

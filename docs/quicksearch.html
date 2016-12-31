@@ -1,0 +1,31 @@
+<html>
+<head>
+</head>
+<body style="background: transparent;">
+    <script src="scripts/docstrap.lib.js"></script>
+    <script src="scripts/lunr.min.js"></script>
+    <script src="scripts/fulltext-search.js"></script>
+
+    <script type="text/x-docstrap-searchdb">
+    {"modules.list.html":{"id":"modules.list.html","title":"Modules","body":" bus-pirate Modules BusPirateBusPirate/i2c Classes BusPirate~BusPirate Events event:readyevent:I2C_ready Modules Classes BusPirate Events ready Ready event -- signals the bus pirate is ready to recieve commands Source: BusPirate.js I2C_ready I2C_ready event -- signals that the BusPirate is ready for I2C commands Source: lib/i2c.js × Search results Close Written with love by the Nodebotanist "},"classes.list.html":{"id":"classes.list.html","title":"Classes","body":" bus-pirate Modules BusPirateBusPirate/i2c Classes BusPirate~BusPirate Events event:readyevent:I2C_ready Classes Classes BusPirate Events ready Ready event -- signals the bus pirate is ready to recieve commands Source: BusPirate.js I2C_ready I2C_ready event -- signals that the BusPirate is ready for I2C commands Source: lib/i2c.js × Search results Close Written with love by the Nodebotanist "},"index.html":{"id":"index.html","title":"Index","body":" bus-pirate Modules BusPirateBusPirate/i2c Classes BusPirate~BusPirate Events event:readyevent:I2C_ready × Search results Close Written with love by the Nodebotanist "},"module-BusPirate.html":{"id":"module-BusPirate.html","title":"Module: BusPirate","body":" bus-pirate Modules BusPirateBusPirate/i2c Classes BusPirate~BusPirate Events event:readyevent:I2C_ready Module: BusPirate Main BusPirate module Author: nodebotanist Source: BusPirate.js Classes BusPirate Events ready Ready event -- signals the bus pirate is ready to recieve commands Source: BusPirate.js × Search results Close Written with love by the Nodebotanist "},"module-BusPirate-BusPirate.html":{"id":"module-BusPirate-BusPirate.html","title":"Class: BusPirate","body":" bus-pirate Modules BusPirateBusPirate/i2c Classes BusPirate~BusPirate Events event:readyevent:I2C_ready Class: BusPirate BusPirate~ BusPirate new BusPirate(options) Represents a BusPirate object Parameters: Name Type Description options Object Properties Name Type Description port String - the absolute path to the serial port of the bus pirate (e.g. /dev/tty.usbserial-xxxx) Source: BusPirate.js Methods reset() Sends a reset code to the bus pirate Source: BusPirate.js start() Starts the bus pirate. Source: BusPirate.js Fires: event:ready × Search results Close Written with love by the Nodebotanist "},"module-BusPirate_i2c.html":{"id":"module-BusPirate_i2c.html","title":"Module: BusPirate/i2c","body":" bus-pirate Modules BusPirateBusPirate/i2c Classes BusPirate~BusPirate Events event:readyevent:I2C_ready Module: BusPirate/i2c I2C module -- adds I2C function calls to the BusPirate object Author: nodebotanist Source: lib/i2c.js Type Definitions I2cInitCallback() This is called when I2C is ready Source: lib/i2c.js Events I2C_ready I2C_ready event -- signals that the BusPirate is ready for I2C commands Source: lib/i2c.js × Search results Close Written with love by the Nodebotanist "}}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            Searcher.init();
+        });
+
+        $(window).on("message", function(msg) {
+            var msgData = msg.originalEvent.data;
+
+            if (msgData.msgid != "docstrap.quicksearch.start") {
+                return;
+            }
+
+            var results = Searcher.search(msgData.searchTerms);
+
+            window.parent.postMessage({"results": results, "msgid": "docstrap.quicksearch.done"}, "*");
+        });
+    </script>
+</body>
+</html>
