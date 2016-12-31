@@ -23,9 +23,9 @@ i2cWrite(address, bytesArray)
 
 ## Roadmap
 
-* Major refactor w/async
+* Major refactor w/async [DONE]
 * Find a way to add unit testing
-* Docs (self-generating)
+* Docs (self-generating) [DONE]
 * Finish I2C imlementation
 
 Thanks to node-serialport for making this all possible <3 
