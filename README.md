@@ -58,3 +58,4 @@ Thanks to node-serialport for making this all possible <3
 ## Contributors
 
 * @nodebotanist
+* @hannes-hochreiner

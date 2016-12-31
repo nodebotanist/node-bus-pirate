@@ -1,6 +1,6 @@
 {
     "name": "bus-pirate",
-    "version": "0.2.01",
+    "version": "0.2.2",
     "description": "",
     "main": "BusPirate.js",
     "scripts": {
@@ -9,7 +9,7 @@
         "exampleUart": "node --use_strict examples/uart.js"
     },
     "keywords": [],
-    "author": "",
+    "author": "nodebotanist",
     "license": "ISC",
     "repository": "git@github.com:nodebotanist/node-bus-pirate.git",
     "dependencies": {
