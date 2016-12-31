@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate.html">BusPirate</a></li><li><a href="module-BusPirate_i2c.html">BusPirate/i2c</a></li>
+					<li><a href="module-BusPirate.html">BusPirate</a></li><li><a href="module-BusPirate_i2c.html">BusPirate/i2c</a></li><li><a href="module-BusPirate_uart.html">BusPirate/uart</a></li>
 				</ul>
 			</li>
 			
@@ -41,13 +41,6 @@
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
 					<li><a href="module-BusPirate_i2c.html#~event:I2C_ready">event:I2C_ready</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#uart">uart</a></li>
 				</ul>
 			</li>
 			
@@ -123,6 +116,8 @@ util.inherits(BusPirate, EventEmitter)
 
 // Add in the I2C module
 Object.assign(BusPirate.prototype, i2c)
+
+// Add in the UART module
 Object.assign(BusPirate.prototype, uart)
 
 /**
@@ -167,8 +162,7 @@ BusPirate.prototype.start = function() {
     )
 }
 
-module.exports = BusPirate
-</pre>
+module.exports = BusPirate</pre>
     </article>
 </section>
 

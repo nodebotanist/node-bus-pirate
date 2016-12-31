@@ -48,6 +48,8 @@ util.inherits(BusPirate, EventEmitter)
 
 // Add in the I2C module
 Object.assign(BusPirate.prototype, i2c)
+
+// Add in the UART module
 Object.assign(BusPirate.prototype, uart)
 
 /**
