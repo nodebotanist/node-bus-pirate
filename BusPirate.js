@@ -23,13 +23,13 @@ const uart = require('./lib/uart.js')
 function BusPirate(options) {
     // throw if no port is given
     if (!options || !options.port) {
-        throw new Error('port required in options object')
+        throw new Error('Port required in options object')
     }
 
     // throw if port does not exist
     fs.stat(options.port, (err) => {
         if (err) {
-            throw err
+            throw new Error('Port not found')
         }
     })
 
