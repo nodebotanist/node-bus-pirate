@@ -13,8 +13,8 @@ describe('Main BusPirate module', () => {
 
     before(() => {
         fsStub = sinon.stub(fs, 'stat')
-        fsStub.withArgs('/dev/tty.usbserial-xxxx').yields([null, {}])
-        fsStub.withArgs('/dev/tty.usbserial-yyyy').yields([new Error(), null])
+        fsStub.withArgs('/dev/tty.usbserial-xxxx').yields()
+        fsStub.withArgs('/dev/tty.usbserial-yyyy').throws()
     })
 
     beforeEach(() => {
@@ -37,7 +37,7 @@ describe('Main BusPirate module', () => {
                 })
             }
 
-            assert.throws(fn, 'BusPirate constructor did not throw an error')
+            assert.throws(fn, /.*/, 'BusPirate constructor did not throw an error')
         })
 
         it('should fail when no port is passed', () => {
@@ -45,7 +45,7 @@ describe('Main BusPirate module', () => {
                 busPirate = new BusPirate({})
             }
 
-            assert.throws(fn, 'BusPirate constructor did not throw an error')
+            assert.throws(fn, /^port required/, 'BusPirate constructor did not throw an error')
         })
     })
 

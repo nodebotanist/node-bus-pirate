@@ -1,4 +1,5 @@
 const util = require('util')
+const fs = require('fs')
 const EventEmitter = require('events').EventEmitter
 const SerialPort = require('serialport')
 const async = require('async')
@@ -20,6 +21,18 @@ const uart = require('./lib/uart.js')
  * @param {String} options.port -- the absolute path to the serial port of the bus pirate (e.g. /dev/tty.usbserial-xxxx)
  */
 function BusPirate(options) {
+    // throw if no port is given
+    if (!options || !options.port) {
+        throw new Error('port required in options object')
+    }
+
+    // throw if port does not exist
+    fs.stat(options.port, (err) => {
+        if (err) {
+            throw err
+        }
+    })
+
     EventEmitter.call(this)
 
     // Queue input from the bus pirate for stuff that needs to be synchronus
