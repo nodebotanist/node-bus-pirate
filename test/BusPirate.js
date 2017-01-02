@@ -21,6 +21,10 @@ describe('Main BusPirate module', () => {
         busPirate = undefined;
     })
 
+    after(() => {
+        fs.stat.restore()
+    })
+
     describe('constructor', () => {
         it('should construct when a port that exists is passed', () => {
             busPirate = new BusPirate({
@@ -49,7 +53,26 @@ describe('Main BusPirate module', () => {
         })
     })
 
-    describe('start()', () => {
+    describe('start()', (done) => {
+        it('should fire the ready event when the bus pirate sends BBIO1', () => {
+            busPirate = new BusPirate({
+                port: '/dev/tty.usbserial-xxxx'
+            })
+
+            let eventHandler = sinon.spy()
+
+            busPirate.on('ready', eventHandler)
+            busPirate.start()
+            busPirate.port.emit('data', 'BBIO1')
+
+            setTimeout(() => {
+                assert(eventHandler.called)
+                done()
+            }, 10)
+        })
+    })
+
+    describe('reset()', () => {
 
     })
 

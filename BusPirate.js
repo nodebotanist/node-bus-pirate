@@ -44,6 +44,7 @@ function BusPirate(options) {
     this.port = new SerialPort(
         options.port, {
             baudRate: 115200,
+            autoOpen: false
         }
     )
 
@@ -53,7 +54,6 @@ function BusPirate(options) {
     this.port.on('data', function(data) {
         data = Buffer.from(data).toString()
         this.inputQueue.push(data)
-        console.log('Queue: ', this.inputQueue)
     }.bind(this))
 }
 
@@ -83,28 +83,31 @@ BusPirate.prototype._flush = function() {
  * @fires ready
  */
 BusPirate.prototype.start = function() {
-    async.until(
-        () => this._ready,
-        (cb) => {
-            if (this.inputQueue.length === 0) {
-                this.port.write([0x00], () => { setTimeout(cb, 100) })
-            } else {
-                let message = this.inputQueue.shift()
-                if (message.indexOf('BBIO1') !== -1) {
-                    console.log('ready')
-                    this._ready = true
+    this.port.open(() => {
+        async.until(
+            () => this._ready,
+            (cb) => {
+                if (this.inputQueue.length === 0) {
+                    this.port.write([0x00], () => { setTimeout(cb, 100) })
+                } else {
+                    let message = this.inputQueue.shift()
+                    if (message.indexOf('BBIO1') !== -1) {
+                        console.log('ready')
+                        this._ready = true
+
                         /**
                          * Ready event -- signals the bus pirate is ready to recieve commands
                          *
                          * @event ready
                          */
-                    this.emit('ready')
-                    this._flush()
+                        this.emit('ready')
+                        this._flush()
+                    }
+                    cb(null)
                 }
-                cb(null)
             }
-        }
-    )
+        )
+    })
 }
 
 module.exports = BusPirate
