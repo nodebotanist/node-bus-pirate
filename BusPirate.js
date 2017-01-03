@@ -48,13 +48,10 @@ function BusPirate(options) {
         }
     )
 
-    // TODO: change these to () => syntax
-    this.port.on('open', function() { this.emit('open') }.bind(this))
-
-    this.port.on('data', function(data) {
+    this.port.on('data', (data) => {
         data = Buffer.from(data).toString()
         this.inputQueue.push(data)
-    }.bind(this))
+    })
 }
 
 util.inherits(BusPirate, EventEmitter)
