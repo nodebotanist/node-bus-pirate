@@ -8,6 +8,12 @@ const fs = require('fs')
 
 const BusPirate = require('../BusPirate.js')
 
+const MockPort = require('./fixtures/hardware-mock.js')
+
+function stubPort(busPirate) {
+    busPirate.port = new MockPort()
+}
+
 describe('Main BusPirate module', () => {
     let busPirate, fsStub
 
@@ -58,6 +64,7 @@ describe('Main BusPirate module', () => {
             busPirate = new BusPirate({
                 port: '/dev/tty.usbserial-xxxx'
             })
+            stubPort(busPirate)
 
             let eventHandler = sinon.spy()
 
@@ -67,6 +74,8 @@ describe('Main BusPirate module', () => {
 
             setTimeout(() => {
                 assert(eventHandler.called)
+                assert(busPirate.inputQueue.length > 0)
+                assert(busPirate.inputQueue[0] = 0x00)
                 done()
             }, 10)
         })

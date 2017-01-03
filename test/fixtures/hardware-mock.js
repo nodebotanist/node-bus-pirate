@@ -7,15 +7,17 @@ function MockPort() {
     if (!this instanceof MockPort) {
         throw new Error('MockPort is a constructor')
     }
+
+    EventEmitter.call(this)
 }
 
 util.inherits(MockPort, EventEmitter)
 
-MockPort.prototype.open = () => {
+MockPort.prototype.open = function() {
     this.emit('open')
 }
 
-MockPort.prototype.write = (dataArray, cb) => {
+MockPort.prototype.write = function(dataArray, cb) {
     cb(null)
 }
 
