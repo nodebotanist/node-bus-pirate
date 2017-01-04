@@ -48,6 +48,8 @@ function BusPirate(options) {
         }
     )
 
+    this.port.on('open', () => { this.emit('open') })
+
     this.port.on('data', (data) => {
         data = Buffer.from(data).toString()
         this.inputQueue.push(data)
