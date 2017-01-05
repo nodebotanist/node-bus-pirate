@@ -26,4 +26,12 @@ MockPort.prototype.fakeReady = function() {
     setTimeout(() => { this.emit('data', 'BBIO1') }, 5)
 }
 
+MockPort.prototype.fakeI2cReady = function() {
+    setTimeout(() => { this.emit('data', 'I2C1') }, 5)
+}
+
+MockPort.prototype.fakeSuccessCode = function() {
+    setTimeout(() => { this.emit('data', '/u0001') }, 5)
+}
+
 module.exports = MockPort
