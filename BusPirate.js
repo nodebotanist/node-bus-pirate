@@ -87,11 +87,10 @@ BusPirate.prototype.start = function() {
             () => this._ready,
             (cb) => {
                 if (this.inputQueue.length === 0) {
-                    this.port.write([0x00], () => { setTimeout(cb, 100) })
+                    this.port.write([0x00], () => { setTimeout(cb, 10) })
                 } else {
                     let message = this.inputQueue.shift()
                     if (message.indexOf('BBIO1') !== -1) {
-                        console.log('ready')
                         this._ready = true
 
                         /**
