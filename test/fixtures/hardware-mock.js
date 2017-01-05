@@ -2,7 +2,7 @@ const EventEmitter = require('events').EventEmitter
 const util = require('util')
 
 // mock port
-// stubs all the functions of the serial port
+// stubs all the necessary functions of the serial port
 function MockPort() {
     if (!this instanceof MockPort) {
         throw new Error('MockPort is a constructor')

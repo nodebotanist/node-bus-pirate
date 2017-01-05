@@ -4,7 +4,10 @@ const EventEmitter = require('events').EventEmitter
 const SerialPort = require('serialport')
 const async = require('async')
 
+// add the I2C module
 const i2c = require('./lib/i2c.js')
+
+// add the UART module
 const uart = require('./lib/uart.js')
 
 /**
@@ -43,12 +46,12 @@ function BusPirate(options) {
 
     this.port = new SerialPort(
         options.port, {
-            baudRate: 115200,
+            baudRate: 115200, // to do: make this an option
             autoOpen: false
         }
     )
 
-    this.port.on('open', () => { this.emit('open') })
+    this.port.on('open', () => { this.emit('open') }) // todo: is this needed?
 
     this.port.on('data', (data) => {
         data = Buffer.from(data).toString()
@@ -65,10 +68,10 @@ Object.assign(BusPirate.prototype, i2c)
 Object.assign(BusPirate.prototype, uart)
 
 /**
- * Sends a reset code to the bus pirate
+ * Sends a reset code to the bus pirate-- exits the current mode if applicable then performs a hardware reset
  * @method reset
  */
-BusPirate.prototype.reset = function(cb) {
+BusPirate.prototype.reset = function() {
     let exitReady = false
     this.port.write([0x00])
     async.until(
@@ -89,6 +92,7 @@ BusPirate.prototype.reset = function(cb) {
     )
 }
 
+// TODO: turn the data queue into its own object
 BusPirate.prototype._flush = function() {
     this.inputQueue = []
 }
