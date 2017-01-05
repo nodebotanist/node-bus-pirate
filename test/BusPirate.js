@@ -81,7 +81,7 @@ describe('Main BusPirate module', () => {
                 eventHandler()
             })
 
-            setTimeout(() => { busPirate.port.emit('data', 'BBIO1') }, 5)
+            busPirate.port.fakeReady()
 
             setTimeout(() => {
                 assert(eventHandler.called, 'Ready event handler was not called')
@@ -99,13 +99,14 @@ describe('Main BusPirate module', () => {
 
             busPirate.start()
 
-            setTimeout(() => { busPirate.port.emit('data', 'BBIO1') }, 5)
+            busPirate.port.fakeReady()
 
             busPirate.on('ready', () => {
                 let writeSpy = sinon.spy(busPirate.port, 'write')
 
                 busPirate.reset(() => {})
-                setTimeout(() => { busPirate.port.emit('data', 'BBIO1') }, 5)
+
+                busPirate.port.fakeReady()
 
                 setTimeout(() => {
                     assert(writeSpy.called, 'reset() did not call port.write')
@@ -115,9 +116,5 @@ describe('Main BusPirate module', () => {
                 }, 15)
             })
         })
-    })
-
-    describe('data queue', () => {
-
     })
 })

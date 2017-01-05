@@ -22,4 +22,8 @@ MockPort.prototype.write = function(dataArray, cb) {
     if (cb) { cb(null) }
 }
 
+MockPort.prototype.fakeReady = function() {
+    setTimeout(() => { this.emit('data', 'BBIO1') }, 5)
+}
+
 module.exports = MockPort
