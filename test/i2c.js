@@ -26,7 +26,10 @@ describe('I2C module', () => {
     })
 
     beforeEach(() => {
-        busPirate = undefined;
+        busPirate = new BusPirate({
+            port: '/dev/tty.usbmodem-xxxx'
+        });
+        stubPort(busPirate)
     })
 
     after(() => {
@@ -35,11 +38,6 @@ describe('I2C module', () => {
 
     describe('.i2cInit()', () => {
         it('should fire an I2C_ready event when "I2C1" is received', (done) => {
-            busPirate = new BusPirate({
-                port: '/dev/tty.usbmodem-xxxx'
-            })
-            stubPort(busPirate)
-
             let eventHandler = sinon.spy()
 
             busPirate.on('ready', () => {
@@ -59,11 +57,6 @@ describe('I2C module', () => {
         })
 
         it('should call a callback if one is passed', (done) => {
-            busPirate = new BusPirate({
-                port: '/dev/tty.usbmodem-xxxx'
-            })
-            stubPort(busPirate)
-
             let eventHandler = sinon.spy()
 
             busPirate.on('ready', () => {
@@ -81,11 +74,6 @@ describe('I2C module', () => {
         })
 
         it('should recover from an accidental reset', (done) => {
-            busPirate = new BusPirate({
-                port: '/dev/tty.usbmodem-xxxx'
-            })
-            stubPort(busPirate)
-
             let eventHandler = sinon.spy()
 
             busPirate.on('ready', () => {
@@ -106,37 +94,216 @@ describe('I2C module', () => {
         })
     })
 
-    describe('init()', () => {
-        it('should throw if no options are sent', () => {
+    describe('.i2cConfig()', () => {
+        it('should throw if no options are sent', (done) => {
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                assert.throws(busPirate.i2cConfig, /options object must be passed to .i2cConfig\(\)/)
+                done()
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should throw if I2C mode is not active', (done) => {
+            busPirate.on('ready', () => {
+                assert.throws(busPirate.i2cConfig, /\.i2cConfig\(\) requires I2C mode to be active/)
+                done()
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should emit an I2C_configured event when complete', (done) => {
+            let eventHandler = sinon.spy()
+
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                busPirate.i2cConfig({
+                    power: true,
+                    pullups: true,
+                    aux: true,
+                    cs: true
+                })
+                busPirate.port.fakeSuccessCode()
+            })
+
+            busPirate.on('I2C_configured', eventHandler)
+
+            setTimeout(() => {
+                assert(eventHandler.called, 'I2C_configured event was not emitted')
+            }, 40)
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should call a callback if passed when complete', (done) => {
+            let eventHandler = sinon.spy()
+
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                busPirate.i2cConfig({
+                    power: true,
+                    pullups: true,
+                    aux: true,
+                    cs: true
+                }, eventHandler)
+                busPirate.port.fakeSuccessCode()
+
+                setTimeout(() => {
+                    assert(eventHandler.called, '.i2cConfig() callback not called')
+                    done()
+                }, 10)
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should write 0x40 if all options are false', (done) => {
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                let writeSpy = sinon.spy(busPirate.port, 'write')
+
+                busPirate.i2cConfig({
+                    power: false,
+                    pullups: false,
+                    aux: false,
+                    cs: false
+                }, () => {
+                    assert(writeSpy.firstCall.args[0][0] == 0x40, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x40')
+                    done()
+                })
+
+                busPirate.port.fakeSuccessCode()
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should write power bit correctly', (done) => {
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                let writeSpy = sinon.spy(busPirate.port, 'write')
+
+                busPirate.i2cConfig({
+                    power: true,
+                    pullups: false,
+                    aux: false,
+                    cs: false
+                }, () => {
+                    assert(writeSpy.firstCall.args[0][0] == 0x48, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x48')
+                    done()
+                })
+
+                busPirate.port.fakeSuccessCode()
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should write pullup resistor bit correctly', (done) => {
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                let writeSpy = sinon.spy(busPirate.port, 'write')
+
+                busPirate.i2cConfig({
+                    power: false,
+                    pullups: true,
+                    aux: false,
+                    cs: false
+                }, () => {
+                    assert(writeSpy.firstCall.args[0][0] == 0x44, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x48')
+                    done()
+                })
+
+                busPirate.port.fakeSuccessCode()
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        it('should write AUX bit correctly', (done) => {
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            busPirate.on('I2C_ready', () => {
+                let writeSpy = sinon.spy(busPirate.port, 'write')
+
+                busPirate.i2cConfig({
+                    power: false,
+                    pullups: false,
+                    aux: true,
+                    cs: false
+                }, () => {
+                    assert(writeSpy.firstCall.args[0][0] == 0x42, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x48')
+                    done()
+                })
+
+                busPirate.port.fakeSuccessCode()
+            })
+
+            busPirate.start()
+            busPirate.port.fakeReady()
 
         })
 
-        it('should emit an I2C_configured event when complete', () => {
+        it('should write CS bit correctly', (done) => {
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
 
-        })
+            busPirate.on('I2C_ready', () => {
+                let writeSpy = sinon.spy(busPirate.port, 'write')
 
-        it('should call a callback if passed when complete', () => {
+                busPirate.i2cConfig({
+                    power: false,
+                    pullups: false,
+                    aux: false,
+                    cs: true
+                }, () => {
+                    assert(writeSpy.firstCall.args[0][0] == 0x41, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x48')
+                    done()
+                })
 
-        })
+                busPirate.port.fakeSuccessCode()
+            })
 
-        it('should write 0x40 if all options are false', () => {
-
-        })
-
-        it('should write power bit correctly', () => {
-
-        })
-
-        it('should write pullup resistor bit correctly', () => {
-
-        })
-
-        it('should write AUX bit correctly', () => {
-
-        })
-
-        it('should write CS bit correctly', () => {
-
+            busPirate.start()
+            busPirate.port.fakeReady()
         })
     })
 
