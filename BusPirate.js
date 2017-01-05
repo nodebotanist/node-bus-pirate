@@ -43,6 +43,7 @@ function BusPirate(options) {
 
     // Initial state setup
     this._ready = false
+    this._i2c = false
 
     this.port = new SerialPort(
         options.port, {
