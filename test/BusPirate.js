@@ -12,6 +12,14 @@ const MockPort = require('./fixtures/hardware-mock.js')
 
 function stubPort(busPirate) {
     busPirate.port = new MockPort()
+
+    busPirate.port.on('open', () => {
+        busPirate.emit('open')
+    })
+
+    busPirate.port.on('data', (data) => {
+        busPirate.inputQueue.push(data)
+    })
 }
 
 describe('Main BusPirate module', () => {
@@ -59,8 +67,8 @@ describe('Main BusPirate module', () => {
         })
     })
 
-    describe('start()', (done) => {
-        it('should fire the ready event when the bus pirate sends BBIO1', () => {
+    describe('start()', () => {
+        it('should fire the ready event when the bus pirate sends BBIO1', (done) => {
             busPirate = new BusPirate({
                 port: '/dev/tty.usbserial-xxxx'
             })
@@ -68,21 +76,44 @@ describe('Main BusPirate module', () => {
 
             let eventHandler = sinon.spy()
 
-            busPirate.on('ready', eventHandler)
             busPirate.start()
-            busPirate.port.emit('data', 'BBIO1')
+            busPirate.on('ready', () => {
+                eventHandler()
+            })
+
+            setTimeout(() => { busPirate.port.emit('data', 'BBIO1') }, 5)
 
             setTimeout(() => {
-                assert(eventHandler.called)
-                assert(busPirate.inputQueue.length > 0)
-                assert(busPirate.inputQueue[0] = 0x00)
+                assert(eventHandler.called, 'Ready event handler was not called')
                 done()
-            }, 10)
+            }, 99)
         })
     })
 
     describe('reset()', () => {
+        it('should fire a 0x00, wait for BBIO1, then fire 0x0F', (done) => {
+            busPirate = new BusPirate({
+                port: '/dev/tty.usbserial-xxxx'
+            })
+            stubPort(busPirate)
 
+            busPirate.start()
+
+            setTimeout(() => { busPirate.port.emit('data', 'BBIO1') }, 5)
+
+            busPirate.on('ready', () => {
+                let writeSpy = sinon.spy(busPirate.port, 'write')
+
+                busPirate.reset()
+                console.log('write spy', writeSpy)
+
+                setTimeout(() => {
+                    assert(writeSpy.called, 'reset() did not call port.write')
+                    assert(writeSpy.calledWith([0x00]), 'reset() did not call port.write with 0x00 first')
+                    done()
+                }, 15)
+            })
+        })
     })
 
     describe('data queue', () => {

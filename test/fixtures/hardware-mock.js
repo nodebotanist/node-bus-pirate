@@ -13,12 +13,13 @@ function MockPort() {
 
 util.inherits(MockPort, EventEmitter)
 
-MockPort.prototype.open = function() {
+MockPort.prototype.open = function(cb) {
     this.emit('open')
+    cb()
 }
 
 MockPort.prototype.write = function(dataArray, cb) {
-    cb(null)
+    if (cb) { cb(null) }
 }
 
 module.exports = MockPort
