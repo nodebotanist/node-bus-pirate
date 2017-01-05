@@ -68,8 +68,25 @@ Object.assign(BusPirate.prototype, uart)
  * Sends a reset code to the bus pirate
  * @method reset
  */
-BusPirate.prototype.reset = function() {
-    this.port.write([0x0F])
+BusPirate.prototype.reset = function(cb) {
+    let exitReady = false
+    this.port.write([0x00])
+    async.until(
+        () => exitReady,
+        (cb) => {
+            if (this.inputQueue.length === 0) {
+                this.port.write([0x00], () => { setTimeout(cb, 10) })
+            } else {
+                let message = this.inputQueue.shift()
+                if (message.indexOf('BBIO1') !== -1) {
+                    this.port.write([0x0F])
+                    exitReady = true
+                    this._flush()
+                }
+                cb(null)
+            }
+        }
+    )
 }
 
 BusPirate.prototype._flush = function() {

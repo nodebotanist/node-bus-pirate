@@ -4,9 +4,7 @@ var busPirate = new BusPirate({
     port: '/dev/tty.usbserial-AI03KY7Z'
 })
 
-busPirate.on('open', () => {
-    busPirate.start()
-})
+busPirate.start()
 
 busPirate.on('ready', () => {
     busPirate.i2cInit(() => {
