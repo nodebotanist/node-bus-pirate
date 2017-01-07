@@ -346,7 +346,7 @@ describe('I2C module', () => {
         })
 
         it('Should throw if numBytes > 4096', () => {
-            assert.throws(() => {})
+            assert.throws(() => { busPirate.i2cReadFrom(0x00, 0x00, 5000) })
         })
 
         it('Should set writeBytes to 2 (for the address and register)', () => {
