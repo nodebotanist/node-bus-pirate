@@ -337,4 +337,50 @@ describe('I2C module', () => {
         })
     })
 
+    describe('.i2cReadFrom()', () => {
+        it('Should throw if numBytes > 4096', () => {
+
+        })
+
+        it('Should set writeBytes to 2 (for the address and register)', () => {
+
+        })
+
+        it('Should set the correct number of bytes to read in the command byte', () => {
+
+        })
+
+        it('Should send the command byte first', () => {
+
+        })
+
+        it('Should send the address byte second', () => {
+
+        })
+
+        it('Should send the register byte third', () => {
+
+        })
+
+        it('Should throw if the Bus Pirate throws an error', () => {
+
+        })
+
+        it('Should emit a i2c_read_begin event when the Bus Pirate ACKs the read', () => {
+
+        })
+
+        it('Should emit a i2c_data event on data from the BusPirate', () => {
+
+        })
+
+        it('Should emit a i2c_read_end event when all expected bytes have been recieved', () => {
+
+        })
+
+        it('Should emit an i2c_timeout event if not all bytes are received', function() => {
+
+        })
+    })
+
 })
