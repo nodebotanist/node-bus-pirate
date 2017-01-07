@@ -4,7 +4,9 @@
     "description": "Control Bus Pirate hardware with Node.JS",
     "main": "BusPirate.js",
     "scripts": {
-        "test": "./node_modules/.bin/mocha test/BusPirate.js",
+        "test": "./node_modules/.bin/mocha test/all.js",
+        "test_main": "./node_modules/.bin/mocha test/BusPirate.js",
+        "test_i2c": "./node_modules/.bin/mocha test/i2c.js",
         "gen_docs": "./node_modules/.bin/jsdoc -c conf.json --readme README.md",
         "exampleUart": "node --use_strict examples/uart.js"
     },
