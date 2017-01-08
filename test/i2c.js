@@ -460,7 +460,7 @@ describe('I2C module', () => {
             let eventHandler = sinon.spy()
 
             busPirate.i2cReadFrom(0x29, 0x3A, 3)
-            busPirate.on('i2c_read_end', eventHandler)
+            busPirate.on('i2c_read_complete', eventHandler)
 
             busPirate.port.fakeSuccessCode()
             busPirate.port.fakeByteStream()
