@@ -34,4 +34,8 @@ MockPort.prototype.fakeSuccessCode = function() {
     setTimeout(() => { this.emit('data', '\u0001') }, 5)
 }
 
+MockPort.prototype.fakeFailureCode = function() {
+    setTimeout(() => { this.emit('data', '\u0000') }, 5)
+}
+
 module.exports = MockPort
