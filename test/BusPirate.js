@@ -18,7 +18,7 @@ function stubPort(busPirate) {
     })
 
     busPirate.port.on('data', (data) => {
-        busPirate.inputQueue.push(data)
+        busPirate.inputQueue.add(data)
     })
 }
 

@@ -23,25 +23,25 @@ MockPort.prototype.write = function(dataArray, cb) {
 }
 
 MockPort.prototype.fakeReady = function() {
-    setTimeout(() => { this.emit('data', 'BBIO1') }, 5)
+    setTimeout(() => { this.emit('data', Buffer.from('BBIO1')) }, 5)
 }
 
 MockPort.prototype.fakeI2cReady = function() {
-    setTimeout(() => { this.emit('data', 'I2C1') }, 5)
+    setTimeout(() => { this.emit('data', Buffer.from('I2C1')) }, 5)
 }
 
 MockPort.prototype.fakeSuccessCode = function() {
-    setTimeout(() => { this.emit('data', '\u0001') }, 5)
+    setTimeout(() => { this.emit('data', Buffer.from('\u0001')) }, 5)
 }
 
 MockPort.prototype.fakeFailureCode = function() {
-    setTimeout(() => { this.emit('data', '\u0000') }, 5)
+    setTimeout(() => { this.emit('data', Buffer.from('\u0000')) }, 5)
 }
 
 MockPort.prototype.fakeByteStream = function() {
-    setTimeout(() => { this.emit('data', '0x01') }, 10)
-    setTimeout(() => { this.emit('data', '0x02') }, 15)
-    setTimeout(() => { this.emit('data', '0x03') }, 20)
+    setTimeout(() => { this.emit('data', Buffer.from('0x01')) }, 10)
+    setTimeout(() => { this.emit('data', Buffer.from('0x02')) }, 15)
+    setTimeout(() => { this.emit('data', Buffer.from('0x03')) }, 20)
 }
 
 module.exports = MockPort
