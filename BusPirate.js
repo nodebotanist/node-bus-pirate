@@ -4,6 +4,9 @@ const EventEmitter = require('events').EventEmitter
 const SerialPort = require('serialport')
 const async = require('async')
 
+// our InputQueue object
+const InputQueue = require('./lib/InputQueue.js')
+
 // add the I2C module
 const i2c = require('./lib/i2c.js')
 
@@ -39,7 +42,7 @@ function BusPirate(options) {
     EventEmitter.call(this)
 
     // Queue input from the bus pirate for stuff that needs to be synchronus
-    this.inputQueue = []
+    this.inputQueue = new InputQueue()
 
     // Initial state setup
     this._ready = false
@@ -55,8 +58,7 @@ function BusPirate(options) {
     this.port.on('open', () => { this.emit('open') }) // todo: is this needed?
 
     this.port.on('data', (data) => {
-        data = Buffer.from(data).toString()
-        this.inputQueue.push(data)
+        this.inputQueue.add(data)
     })
 }
 
@@ -81,21 +83,18 @@ BusPirate.prototype.reset = function() {
             if (this.inputQueue.length === 0) {
                 this.port.write([0x00], () => { setTimeout(cb, 10) })
             } else {
-                let message = this.inputQueue.shift()
-                if (message.indexOf('BBIO1') !== -1) {
+                let message = this.inputQueue.fetchString(5)
+                if (message && message == 'BBIO1') {
                     this.port.write([0x0F])
                     exitReady = true
-                    this._flush()
+                    this.inputQueue.flush()
+                    cb(null)
+                } else {
+                    setTimeout(cb, 10)
                 }
-                cb(null)
             }
         }
     )
-}
-
-// TODO: turn the data queue into its own object
-BusPirate.prototype._flush = function() {
-    this.inputQueue = []
 }
 
 /**
@@ -111,8 +110,8 @@ BusPirate.prototype.start = function() {
                 if (this.inputQueue.length === 0) {
                     this.port.write([0x00], () => { setTimeout(cb, 10) })
                 } else {
-                    let message = this.inputQueue.shift()
-                    if (message.indexOf('BBIO1') !== -1) {
+                    let message = this.inputQueue.fetchString(5)
+                    if (message && message == 'BBIO1') {
                         this._ready = true
 
                         /**
@@ -121,9 +120,11 @@ BusPirate.prototype.start = function() {
                          * @event ready
                          */
                         this.emit('ready')
-                        this._flush()
+                        this.inputQueue.flush()
+                        cb(null)
+                    } else {
+                        setTimeout(cb, 10)
                     }
-                    cb(null)
                 }
             }
         )

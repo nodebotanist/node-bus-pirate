@@ -13,7 +13,7 @@ function stubPort(busPirate) {
     })
 
     busPirate.port.on('data', (data) => {
-        busPirate.inputQueue.push(data)
+        busPirate.inputQueue.add(data)
     })
 }
 
@@ -177,28 +177,6 @@ describe('I2C module', () => {
             })
 
             busPirate.on('I2C_configured', eventHandler)
-
-            busPirate.i2cInit()
-            busPirate.port.fakeI2cReady()
-        })
-
-        it('should call a callback if passed when complete', (done) => {
-            let eventHandler = sinon.spy()
-
-            busPirate.on('I2C_ready', () => {
-                busPirate.i2cConfig({
-                    power: true,
-                    pullups: true,
-                    aux: true,
-                    cs: true
-                }, eventHandler)
-                busPirate.port.fakeSuccessCode()
-
-                setTimeout(() => {
-                    assert(eventHandler.called, '.i2cConfig() callback not called')
-                    done()
-                }, 10)
-            })
 
             busPirate.i2cInit()
             busPirate.port.fakeI2cReady()
@@ -414,7 +392,6 @@ describe('I2C module', () => {
             busPirate.i2cReadFrom(0x00, 0x00, 258)
 
             busPirate.once('i2c_data_start', () => {
-                console.log('inner')
                 assert(portSpy.firstCall.args[0][3] == 0x01, 'first byte of bytes to read should be 0x00 when numBytes is 258')
                 assert(portSpy.firstCall.args[0][4] == 0x02, 'second byte of bytes to write should be 0x01 when numBytes is 258')
                 done()
@@ -472,9 +449,9 @@ describe('I2C module', () => {
 
             setTimeout(() => {
                 assert(eventHandler.calledThrice, 'expected 3 calls, got ' + eventHandler.callCount)
-                assert(eventHandler.firstCall.args[0] == '0x01', 'expected 0x01, got ' + eventHandler.firstCall.args[0])
-                assert(eventHandler.secondCall.args[0] == '0x02', 'expected 0x02, got ' + eventHandler.secondCall.args[0])
-                assert(eventHandler.thirdCall.args[0] == '0x03', 'expected 0x03, got ' + eventHandler.thirdCall.args[0])
+                assert(eventHandler.firstCall.args[0][0] == 0x01, 'expected 0x01, got ' + eventHandler.firstCall.args[0])
+                assert(eventHandler.secondCall.args[0][0] == 0x02, 'expected 0x02, got ' + eventHandler.secondCall.args[0])
+                assert(eventHandler.thirdCall.args[0][0] == 0x03, 'expected 0x03, got ' + eventHandler.thirdCall.args[0])
                 done()
             }, 30)
         })
