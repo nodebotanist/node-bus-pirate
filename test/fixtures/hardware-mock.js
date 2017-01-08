@@ -38,4 +38,10 @@ MockPort.prototype.fakeFailureCode = function() {
     setTimeout(() => { this.emit('data', '\u0000') }, 5)
 }
 
+MockPort.prototype.fakeByteStream = function() {
+    setTimeout(() => { this.emit('data', '0x01') }, 10)
+    setTimeout(() => { this.emit('data', '0x02') }, 15)
+    setTimeout(() => { this.emit('data', '0x03') }, 20)
+}
+
 module.exports = MockPort
