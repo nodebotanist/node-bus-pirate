@@ -31,17 +31,17 @@ MockPort.prototype.fakeI2cReady = function() {
 }
 
 MockPort.prototype.fakeSuccessCode = function() {
-    setTimeout(() => { this.emit('data', Buffer.from('\\u0001')) }, 5)
+    setTimeout(() => { this.emit('data', Buffer.from([1])) }, 5)
 }
 
 MockPort.prototype.fakeFailureCode = function() {
-    setTimeout(() => { this.emit('data', Buffer.from('\\u0000')) }, 5)
+    setTimeout(() => { this.emit('data', Buffer.from([0])) }, 5)
 }
 
 MockPort.prototype.fakeByteStream = function() {
-    setTimeout(() => { this.emit('data', Buffer.from([0x01])) }, 10)
-    setTimeout(() => { this.emit('data', Buffer.from([0x02])) }, 15)
-    setTimeout(() => { this.emit('data', Buffer.from([0x03])) }, 20)
+    setTimeout(() => { this.emit('data', Buffer.from([1])) }, 10)
+    setTimeout(() => { this.emit('data', Buffer.from([2])) }, 15)
+    setTimeout(() => { this.emit('data', Buffer.from([3])) }, 20)
 }
 
 module.exports = MockPort
