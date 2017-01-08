@@ -479,9 +479,20 @@ describe('I2C module', () => {
             }, 30)
         })
 
-        it('Should emit a i2c_read_end event when all expected bytes have been recieved')
+        it('Should emit a i2c_read_end event when all expected bytes have been recieved', (done) => {
+            let eventHandler = sinon.spy()
 
-        it('Should emit an i2c_timeout event if not all bytes are received')
+            busPirate.i2cReadFrom(0x29, 0x3A, 3)
+            busPirate.on('i2c_read_end', eventHandler)
+
+            busPirate.port.fakeSuccessCode()
+            busPirate.port.fakeByteStream()
+
+            setTimeout(() => {
+                assert(eventHandler.called)
+                done()
+            }, 30)
+        })
     })
 
 })
