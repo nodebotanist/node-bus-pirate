@@ -58,6 +58,7 @@ function BusPirate(options) {
     this.port.on('open', () => { this.emit('open') }) // todo: is this needed?
 
     this.port.on('data', (data) => {
+        console.log(data)
         this.inputQueue.add(data)
     })
 }
@@ -107,24 +108,20 @@ BusPirate.prototype.start = function() {
         async.until(
             () => this._ready,
             (cb) => {
-                if (this.inputQueue.length === 0) {
-                    this.port.write([0x00], () => { setTimeout(cb, 10) })
-                } else {
-                    let message = this.inputQueue.fetchString(5)
-                    if (message && message == 'BBIO1') {
-                        this._ready = true
+                let message = this.inputQueue.fetchString(5)
+                if (message && message == 'BBIO1') {
+                    this._ready = true
 
-                        /**
-                         * Ready event -- signals the bus pirate is ready to recieve commands
-                         *
-                         * @event ready
-                         */
-                        this.emit('ready')
-                        this.inputQueue.flush()
-                        cb(null)
-                    } else {
-                        setTimeout(cb, 10)
-                    }
+                    /**
+                     * Ready event -- signals the bus pirate is ready to recieve commands
+                     *
+                     * @event ready
+                     */
+                    this.emit('ready')
+                    this.inputQueue.flush()
+                    cb(null)
+                } else {
+                    this.port.write([0x00], () => { setTimeout(cb, 10) })
                 }
             }
         )
