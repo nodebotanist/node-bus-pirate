@@ -456,11 +456,122 @@ describe('I2C module', () => {
             }, 30)
         })
 
-        it('Should emit a i2c_read_end event when all expected bytes have been recieved', (done) => {
+        it('Should emit a i2c_read_complete event when all expected bytes have been recieved', (done) => {
             let eventHandler = sinon.spy()
 
             busPirate.i2cReadFrom(0x29, 0x3A, 3)
             busPirate.on('i2c_read_complete', eventHandler)
+
+            busPirate.port.fakeSuccessCode()
+            busPirate.port.fakeByteStream()
+
+            setTimeout(() => {
+                assert(eventHandler.called)
+                done()
+            }, 30)
+        })
+    })
+
+    describe('.i2cWrite()', () => {
+        let portSpy
+
+        beforeEach((done) => {
+            busPirate = new BusPirate({
+                port: '/dev/tty.usbmodem-xxxx'
+            });
+            stubPort(busPirate)
+
+            busPirate.on('ready', () => {
+                busPirate.i2cInit()
+                busPirate.port.fakeI2cReady()
+            })
+
+            portSpy = sinon.spy(busPirate.port, 'write')
+
+            busPirate.on('I2C_ready', () => {
+                busPirate.i2cConfig({
+                    power: false,
+                    pullups: true,
+                    aux: false,
+                    cs: false
+                })
+
+                busPirate.port.fakeSuccessCode()
+            })
+
+            busPirate.on('I2C_configured', done)
+
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        beforeEach(() => {
+            portSpy.reset()
+        })
+
+        it('Should throw if numBytes > 4096', () => {
+            busPirate.on('I2C_configured', () => {
+                assert.throws(() => { busPirate.i2cWrite(0x00, 0x00, 5000) })
+            })
+        })
+
+        it('Should send the command byte first', (done) => {
+            busPirate.i2cWrite(0x00, [0x00])
+
+            // the second 2 bytes of the command should be 0x00 0x02
+            setTimeout(() => {
+                assert(portSpy.firstCall.args[0][0] == 0x08, 'first byte (command byte) should be 0x08')
+                done()
+            }, 15)
+
+            busPirate.port.fakeSuccessCode()
+        })
+
+        it('Should set writeBytes (bytes 2-3) to the number of bytes in the array', (done) => {
+            let bytes = []
+            for (let i = 0; i < 257; i++) {
+                bytes.push(0x04)
+            }
+            busPirate.i2cWrite(0x00, bytes)
+
+            setTimeout(() => {
+                assert(portSpy.firstCall.args[0][1] == 0x01, 'first byte of bytes to write should be 0x01')
+                assert(portSpy.firstCall.args[0][2] == 0x01, 'second byte of bytes to write should be 0x01')
+                done()
+            }, 15)
+
+            busPirate.port.fakeSuccessCode()
+        })
+
+        it('Should set readBytes (bytes 4-5) to 0x00', (done) => {
+
+            busPirate.i2cWrite(0x00, [0x00])
+
+            setTimeout(() => {
+                assert(portSpy.firstCall.args[0][3] == 0x00, 'first byte of bytes to read should be 0x00 when numBytes is 258')
+                assert(portSpy.firstCall.args[0][4] == 0x00, 'second byte of bytes to write should be 0x01 when numBytes is 258')
+                done()
+            }, 15)
+
+            busPirate.port.fakeSuccessCode()
+        })
+
+        it('Should set the address byte (6) from address', (done) => {
+            busPirate.i2cWrite(0x29, [0x3A])
+
+            setTimeout(() => {
+                assert(portSpy.firstCall.args[0][5] == 0x29, 'expected 0x29 for address, got ' + portSpy.firstCall.args[0][1])
+                done()
+            }, 15)
+
+            busPirate.port.fakeSuccessCode()
+        })
+
+        it('Should emit a i2c_write_complete event when bus pirate acks command', (done) => {
+            let eventHandler = sinon.spy()
+
+            busPirate.i2cWrite(0x29, [0x3A])
+            busPirate.on('i2c_write_complete', eventHandler)
 
             busPirate.port.fakeSuccessCode()
             busPirate.port.fakeByteStream()
