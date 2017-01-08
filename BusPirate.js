@@ -58,7 +58,6 @@ function BusPirate(options) {
     this.port.on('open', () => { this.emit('open') }) // todo: is this needed?
 
     this.port.on('data', (data) => {
-        console.log(data)
         this.inputQueue.add(data)
     })
 }

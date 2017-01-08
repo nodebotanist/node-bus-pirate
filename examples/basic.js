@@ -22,8 +22,21 @@ busPirate.on('I2C_configured', () => {
     busPirate.on('i2c_read_data', (data) => {
         console.log('read: ' + data[0])
     })
+    busPirate.on('i2c_read_complete', () => {
+        console.log('i2c read completed')
+        i2cWriteTest()
+    })
     busPirate.i2cReadFrom(0x52, 0x92, 1)
 })
+
+function i2cWriteTest() {
+    busPirate.on('i2c_write_complete', () => {
+        console.log('i2c write complete')
+    })
+
+    console.log('i2c write starting')
+    busPirate.i2cWrite(0x52, [0x81, 0x00])
+}
 
 busPirate.start()
 
