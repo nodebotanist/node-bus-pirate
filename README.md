@@ -27,6 +27,9 @@ BusPirate.i2cWrite(address, bytesArray)
 ```
 
 ### UART
+
+#### **Removed for refactoring until 2.3.5**
+
 ```
 BusPirate.uartInit();
 BusPirate.uartSetSpeed(9600);
@@ -48,8 +51,7 @@ BusPirate.uartWrite(["abcd"]);
 
 ## Roadmap
 
-* Standardize naming
-* Finish I2C implementation
+* see [issues](https://github.com/nodebotanist/node-bus-pirate/issues) and [projects](https://github.com/nodebotanist/node-bus-pirate/projects)
 
 Thanks to node-serialport for making this all possible <3 
 

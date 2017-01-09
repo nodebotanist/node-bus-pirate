@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate_i2c.html#~event:I2C_ready">event:I2C_ready</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
+					<li><a href="module-BusPirate_i2c.html#~event:i2c_configured">event:i2c_configured</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_complete">event:i2c_read_complete</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_data">event:i2c_read_data</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_error">event:i2c_read_error</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_start">event:i2c_read_start</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_ready">event:i2c_ready</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_write_complete">event:i2c_write_complete</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
 				</ul>
 			</li>
 			
@@ -72,11 +72,14 @@ const EventEmitter = require('events').EventEmitter
 const SerialPort = require('serialport')
 const async = require('async')
 
+// our InputQueue object
+const InputQueue = require('./lib/InputQueue.js')
+
 // add the I2C module
 const i2c = require('./lib/i2c.js')
 
-// add the UART module
-const uart = require('./lib/uart.js')
+// add the UART module-- DELAYED to 2.3.5
+// const uart = require('./lib/uart.js')
 
 /**
  * Main BusPirate module
@@ -107,10 +110,11 @@ function BusPirate(options) {
     EventEmitter.call(this)
 
     // Queue input from the bus pirate for stuff that needs to be synchronus
-    this.inputQueue = []
+    this.inputQueue = new InputQueue()
 
     // Initial state setup
     this._ready = false
+    this._i2c = false
 
     this.port = new SerialPort(
         options.port, {
@@ -122,8 +126,7 @@ function BusPirate(options) {
     this.port.on('open', () => { this.emit('open') }) // todo: is this needed?
 
     this.port.on('data', (data) => {
-        data = Buffer.from(data).toString()
-        this.inputQueue.push(data)
+        this.inputQueue.add(data)
     })
 }
 
@@ -132,8 +135,8 @@ util.inherits(BusPirate, EventEmitter)
 // Add in the I2C module
 Object.assign(BusPirate.prototype, i2c)
 
-// Add in the UART module
-Object.assign(BusPirate.prototype, uart)
+// Add in the UART module-- delayed to 2.3.5
+// Object.assign(BusPirate.prototype, uart)
 
 /**
  * Sends a reset code to the bus pirate-- exits the current mode if applicable then performs a hardware reset
@@ -148,21 +151,18 @@ BusPirate.prototype.reset = function() {
             if (this.inputQueue.length === 0) {
                 this.port.write([0x00], () => { setTimeout(cb, 10) })
             } else {
-                let message = this.inputQueue.shift()
-                if (message.indexOf('BBIO1') !== -1) {
+                let message = this.inputQueue.fetchString(5)
+                if (message &amp;&amp; message == 'BBIO1') {
                     this.port.write([0x0F])
                     exitReady = true
-                    this._flush()
+                    this.inputQueue.flush()
+                    cb(null)
+                } else {
+                    setTimeout(cb, 10)
                 }
-                cb(null)
             }
         }
     )
-}
-
-// TODO: turn the data queue into its own object
-BusPirate.prototype._flush = function() {
-    this.inputQueue = []
 }
 
 /**
@@ -175,22 +175,20 @@ BusPirate.prototype.start = function() {
         async.until(
             () => this._ready,
             (cb) => {
-                if (this.inputQueue.length === 0) {
-                    this.port.write([0x00], () => { setTimeout(cb, 10) })
-                } else {
-                    let message = this.inputQueue.shift()
-                    if (message.indexOf('BBIO1') !== -1) {
-                        this._ready = true
+                let message = this.inputQueue.fetchString(5)
+                if (message &amp;&amp; message == 'BBIO1') {
+                    this._ready = true
 
-                        /**
-                         * Ready event -- signals the bus pirate is ready to recieve commands
-                         *
-                         * @event ready
-                         */
-                        this.emit('ready')
-                        this._flush()
-                    }
+                    /**
+                     * Ready event -- signals the bus pirate is ready to recieve commands
+                     *
+                     * @event ready
+                     */
+                    this.emit('ready')
+                    this.inputQueue.flush()
                     cb(null)
+                } else {
+                    this.port.write([0x00], () => { setTimeout(cb, 10) })
                 }
             }
         )
@@ -229,7 +227,7 @@ module.exports = BusPirate</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 01-05-2017
+		on 01-08-2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

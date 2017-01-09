@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate_i2c.html#~event:I2C_ready">event:I2C_ready</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
+					<li><a href="module-BusPirate_i2c.html#~event:i2c_configured">event:i2c_configured</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_complete">event:i2c_read_complete</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_data">event:i2c_read_data</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_error">event:i2c_read_error</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_start">event:i2c_read_start</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_ready">event:i2c_ready</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_write_complete">event:i2c_write_complete</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
 				</ul>
 			</li>
 			
@@ -146,7 +146,447 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="~event:I2C_ready">I2C_ready</h4>
+    <h4 class="name" id="~event:i2c_configured">i2c_configured</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This is an event emitted when I2C config is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_i2c.js.html">lib/i2c.js</a>,
+				 <a href="lib_i2c.js.html#sunlight-1-line-89">line 89</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:i2c_read_complete">i2c_read_complete</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This event fires when the i2c read is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_i2c.js.html">lib/i2c.js</a>,
+				 <a href="lib_i2c.js.html#sunlight-1-line-242">line 242</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:i2c_read_data">i2c_read_data</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This event fires when the i2c device sends nev data
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_i2c.js.html">lib/i2c.js</a>,
+				 <a href="lib_i2c.js.html#sunlight-1-line-236">line 236</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:i2c_read_error">i2c_read_error</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This event means there was an error reading from the i2c device
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_i2c.js.html">lib/i2c.js</a>,
+				 <a href="lib_i2c.js.html#sunlight-1-line-216">line 216</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:i2c_read_start">i2c_read_start</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This event means we are ready to recieve i2c data
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_i2c.js.html">lib/i2c.js</a>,
+				 <a href="lib_i2c.js.html#sunlight-1-line-205">line 205</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:i2c_ready">i2c_ready</h4>
     
     
 </dt>
@@ -201,7 +641,95 @@
 		<ul class="dummy">
 			<li>
 				<a href="lib_i2c.js.html">lib/i2c.js</a>,
-				 <a href="lib_i2c.js.html#sunlight-1-line-36">line 36</a>
+				 <a href="lib_i2c.js.html#sunlight-1-line-27">line 27</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:i2c_write_complete">i2c_write_complete</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This event fires when the write is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_i2c.js.html">lib/i2c.js</a>,
+				 <a href="lib_i2c.js.html#sunlight-1-line-150">line 150</a>
 			</li>
 		</ul>
 	</dd>
@@ -289,7 +817,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="BusPirate.js.html">BusPirate.js</a>,
-				 <a href="BusPirate.js.html#sunlight-1-line-117">line 117</a>
+				 <a href="BusPirate.js.html#sunlight-1-line-114">line 114</a>
 			</li>
 		</ul>
 	</dd>
@@ -355,7 +883,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 01-05-2017
+		on 01-08-2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
