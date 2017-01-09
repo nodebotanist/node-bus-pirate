@@ -67,8 +67,8 @@ util.inherits(BusPirate, EventEmitter)
 // Add in the I2C module
 Object.assign(BusPirate.prototype, i2c)
 
-// Add in the UART module
-Object.assign(BusPirate.prototype, uart)
+// Add in the UART module-- delayed to 2.3.5
+// Object.assign(BusPirate.prototype, uart)
 
 /**
  * Sends a reset code to the bus pirate-- exits the current mode if applicable then performs a hardware reset

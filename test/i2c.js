@@ -44,11 +44,11 @@ describe('I2C module', () => {
             }
         })
 
-        it('should fire an I2C_ready event when "I2C1" is received', (done) => {
+        it('should fire an i2c_ready event when "I2C1" is received', (done) => {
             let eventHandler = sinon.spy()
 
             busPirate.on('ready', () => {
-                busPirate.on('I2C_ready', eventHandler)
+                busPirate.on('i2c_ready', eventHandler)
 
                 busPirate.i2cInit()
                 busPirate.port.fakeI2cReady()
@@ -65,7 +65,7 @@ describe('I2C module', () => {
 
         it('should set ._i2c to true', (done) => {
             busPirate.on('ready', () => {
-                busPirate.on('I2C_ready', () => {
+                busPirate.on('i2c_ready', () => {
                     assert(busPirate._i2c, 'Expected ._i2c to be true')
                     done()
                 })
@@ -78,28 +78,11 @@ describe('I2C module', () => {
             busPirate.port.fakeReady()
         })
 
-        it('should call a callback if one is passed', (done) => {
-            let eventHandler = sinon.spy()
-
-            busPirate.on('ready', () => {
-                busPirate.i2cInit(eventHandler)
-                busPirate.port.fakeI2cReady()
-
-                setTimeout(() => {
-                    assert(eventHandler.called, '.i2cInit callback not called')
-                    done()
-                }, 15)
-            })
-
-            busPirate.start()
-            busPirate.port.fakeReady()
-        })
-
         it('should recover from an accidental reset', (done) => {
             let eventHandler = sinon.spy()
 
             busPirate.on('ready', () => {
-                busPirate.on('I2C_ready', eventHandler)
+                busPirate.on('i2c_ready', eventHandler)
 
                 busPirate.i2cInit()
                 busPirate.port.fakeReady()
@@ -149,7 +132,7 @@ describe('I2C module', () => {
         })
 
         it('should throw if no options are sent', (done) => {
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 assert.throws(busPirate.i2cConfig, /options object must be passed to .i2cConfig\(\)/)
                 done()
             })
@@ -158,10 +141,10 @@ describe('I2C module', () => {
             busPirate.port.fakeI2cReady()
         })
 
-        it('should emit an I2C_configured event when complete', (done) => {
+        it('should emit an i2c_configured event when complete', (done) => {
             let eventHandler = sinon.spy()
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 busPirate.i2cConfig({
                     power: true,
                     pullups: true,
@@ -171,12 +154,12 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
 
                 setTimeout(() => {
-                    assert(eventHandler.called, 'I2C_configured event was not emitted')
+                    assert(eventHandler.called, 'i2c_configured event was not emitted')
                     done()
                 }, 20)
             })
 
-            busPirate.on('I2C_configured', eventHandler)
+            busPirate.on('i2c_configured', eventHandler)
 
             busPirate.i2cInit()
             busPirate.port.fakeI2cReady()
@@ -185,7 +168,7 @@ describe('I2C module', () => {
         it('should write 0x40 if all options are false', (done) => {
             let writeSpy
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 writeSpy = sinon.spy(busPirate.port, 'write')
 
                 busPirate.i2cConfig({
@@ -198,7 +181,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert(writeSpy.firstCall.args[0][0] == 0x40, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x40')
                 done()
             })
@@ -210,7 +193,7 @@ describe('I2C module', () => {
         it('should write power bit correctly', (done) => {
             let writeSpy
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 writeSpy = sinon.spy(busPirate.port, 'write')
                 busPirate.i2cConfig({
                     power: true,
@@ -222,7 +205,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert(writeSpy.firstCall.args[0][0] == 0x48, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x48')
                 done()
             })
@@ -234,7 +217,7 @@ describe('I2C module', () => {
         it('should write pullup resistor bit correctly', (done) => {
             let writeSpy
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 writeSpy = sinon.spy(busPirate.port, 'write')
                 busPirate.i2cConfig({
                     power: false,
@@ -246,7 +229,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert(writeSpy.firstCall.args[0][0] == 0x44, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x44')
                 done()
             })
@@ -258,7 +241,7 @@ describe('I2C module', () => {
         it('should write AUX bit correctly', (done) => {
             let writeSpy
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 writeSpy = sinon.spy(busPirate.port, 'write')
                 busPirate.i2cConfig({
                     power: false,
@@ -269,7 +252,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert(writeSpy.firstCall.args[0][0] == 0x42, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x42')
                 done()
             })
@@ -281,7 +264,7 @@ describe('I2C module', () => {
         it('should write CS bit correctly', (done) => {
             let writeSpy
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 writeSpy = sinon.spy(busPirate.port, 'write')
                 busPirate.i2cConfig({
                     power: false,
@@ -293,7 +276,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert(writeSpy.firstCall.args[0][0] == 0x41, 'Expected ' + writeSpy.firstCall.args[0][0] + ' to equal 0x41')
                 done()
             })
@@ -319,7 +302,7 @@ describe('I2C module', () => {
 
             portSpy = sinon.spy(busPirate.port, 'write')
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 busPirate.i2cConfig({
                     power: false,
                     pullups: true,
@@ -330,7 +313,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', done)
+            busPirate.on('i2c_configured', done)
 
             busPirate.start()
             busPirate.port.fakeReady()
@@ -341,7 +324,7 @@ describe('I2C module', () => {
         })
 
         it('Should throw if numBytes > 4096', () => {
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert.throws(() => { busPirate.i2cReadFrom(0x00, 0x00, 5000) })
             })
         })
@@ -352,7 +335,7 @@ describe('I2C module', () => {
             busPirate.i2cReadFrom(0x29, 0x3A, 1)
 
             // the second 2 bytes of the command should be 0x00 0x02
-            busPirate.once('i2c_data_start', eventHandler)
+            busPirate.once('i2c_read_start', eventHandler)
 
             busPirate.port.fakeSuccessCode()
 
@@ -366,7 +349,7 @@ describe('I2C module', () => {
             busPirate.i2cReadFrom(0x00, 0x00, 1)
 
             // the second 2 bytes of the command should be 0x00 0x02
-            busPirate.once('i2c_data_start', () => {
+            busPirate.once('i2c_read_start', () => {
                 assert(portSpy.firstCall.args[0][0] == 0x08, 'first byte (command byte) should be 0x08')
                 done()
             })
@@ -378,7 +361,7 @@ describe('I2C module', () => {
             busPirate.i2cReadFrom(0x00, 0x00, 1)
 
             // the second 2 bytes of the command should be 0x00 0x02
-            busPirate.once('i2c_data_start', () => {
+            busPirate.once('i2c_read_start', () => {
                 assert(portSpy.firstCall.args[0][1] == 0x00, 'first byte of bytes to write should be 0x00')
                 assert(portSpy.firstCall.args[0][2] == 0x02, 'second byte of bytes to write should be 0x02')
                 done()
@@ -391,7 +374,7 @@ describe('I2C module', () => {
 
             busPirate.i2cReadFrom(0x00, 0x00, 258)
 
-            busPirate.once('i2c_data_start', () => {
+            busPirate.once('i2c_read_start', () => {
                 assert(portSpy.firstCall.args[0][3] == 0x01, 'first byte of bytes to read should be 0x00 when numBytes is 258')
                 assert(portSpy.firstCall.args[0][4] == 0x02, 'second byte of bytes to write should be 0x01 when numBytes is 258')
                 done()
@@ -404,7 +387,7 @@ describe('I2C module', () => {
             busPirate.i2cReadFrom(0x29, 0x3A, 1)
 
             // the second 2 bytes of the command should be 0x00 0x02
-            busPirate.once('i2c_data_start', () => {
+            busPirate.once('i2c_read_start', () => {
                 assert(portSpy.firstCall.args[0][5] == 0x29, 'expected 0x29 for address, got ' + portSpy.firstCall.args[0][1])
                 done()
             })
@@ -416,7 +399,7 @@ describe('I2C module', () => {
             busPirate.i2cReadFrom(0x29, 0x3A, 1)
 
             // the second 2 bytes of the command should be 0x00 0x02
-            busPirate.once('i2c_data_start', () => {
+            busPirate.once('i2c_read_start', () => {
                 assert(portSpy.firstCall.args[0][6] == 0x3A, 'expected 0x3A for register, got ' + portSpy.firstCall.args[0][2])
                 done()
             })
@@ -488,7 +471,7 @@ describe('I2C module', () => {
 
             portSpy = sinon.spy(busPirate.port, 'write')
 
-            busPirate.on('I2C_ready', () => {
+            busPirate.on('i2c_ready', () => {
                 busPirate.i2cConfig({
                     power: false,
                     pullups: true,
@@ -499,7 +482,7 @@ describe('I2C module', () => {
                 busPirate.port.fakeSuccessCode()
             })
 
-            busPirate.on('I2C_configured', done)
+            busPirate.on('i2c_configured', done)
 
             busPirate.start()
             busPirate.port.fakeReady()
@@ -510,7 +493,7 @@ describe('I2C module', () => {
         })
 
         it('Should throw if numBytes > 4096', () => {
-            busPirate.on('I2C_configured', () => {
+            busPirate.on('i2c_configured', () => {
                 assert.throws(() => { busPirate.i2cWrite(0x00, 0x00, 5000) })
             })
         })
