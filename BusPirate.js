@@ -10,8 +10,8 @@ const InputQueue = require('./lib/InputQueue.js')
 // add the I2C module
 const i2c = require('./lib/i2c.js')
 
-// add the UART module
-const uart = require('./lib/uart.js')
+// add the UART module-- DELAYED to 2.3.5
+// const uart = require('./lib/uart.js')
 
 /**
  * Main BusPirate module
