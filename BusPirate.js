@@ -10,8 +10,8 @@ const InputQueue = require('./lib/InputQueue.js')
 // add the I2C module
 const i2c = require('./lib/i2c.js')
 
-// add the UART module-- DELAYED to 2.3.5
-// const uart = require('./lib/uart.js')
+// add the UART module
+const uart = require('./lib/uart.js')
 
 /**
  * Main BusPirate module
@@ -67,8 +67,8 @@ util.inherits(BusPirate, EventEmitter)
 // Add in the I2C module
 Object.assign(BusPirate.prototype, i2c)
 
-// Add in the UART module-- delayed to 2.3.5
-// Object.assign(BusPirate.prototype, uart)
+// Add in the UART module
+Object.assign(BusPirate.prototype, uart)
 
 /**
  * Sends a reset code to the bus pirate-- exits the current mode if applicable then performs a hardware reset
@@ -125,6 +125,34 @@ BusPirate.prototype.start = function() {
             }
         )
     })
+}
+
+/**
+ * Resets the BusPirate to raw BitBang mode
+ * @method resetMode
+ * @fires mode_reset
+ */
+BusPirate.prototype.resetMode = function() {
+    this._ready = false
+    async.until(
+        () => this._ready,
+        (cb) => {
+            let message = this.inputQueue.fetchString(5)
+            if (message && message == 'BBIO1') {
+                this._ready = true
+
+                /**
+                 * Ready event -- signals the bus pirate is ready to recieve commands
+                 *
+                 * @event ready
+                 */
+                this.emit('mode_reset')
+                cb(null)
+            } else {
+                this.port.write([0x00], () => { setTimeout(cb, 10) })
+            }
+        }
+    )
 }
 
 module.exports = BusPirate
