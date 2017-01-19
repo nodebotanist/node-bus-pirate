@@ -97,4 +97,32 @@ describe('UART module', () => {
             })
         })
     })
+
+    describe('.uartSetSpeed()', () => {
+        beforeEach((start) => {
+            busPirate = new BusPirate({
+                port: '/dev/tty.usbserial-xxxx'
+            })
+            stubPort(busPirate)
+            busPirate.on('ready', () => {
+                busPirate.on('uart_ready', start)
+                busPirate.uartInit()
+                busPirate.port.fakeReady()
+                busPirate.port.fakeUartReady()
+            })
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        afterEach(() => {
+            if (busPirate.port.write.restore) {
+                busPirate.port.write.restore()
+            }
+        })
+
+        it('should throw an error for an invalid speed')
+        it('should throw an error if no speed is sent')
+        it('should send command byte corresponding to the chosen speed')
+        it('should fire a uart_speed_set event when sucessful')
+    })
 })
