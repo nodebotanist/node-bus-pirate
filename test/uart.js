@@ -97,7 +97,7 @@ describe('UART module', () => {
         })
     })
 
-    describe('.uartSetSpeed()', () => {
+    describe('.uartSetBaudRate()', () => {
         beforeEach((start) => {
             busPirate = new BusPirate({
                 port: '/dev/tty.usbserial-xxxx'
@@ -120,17 +120,17 @@ describe('UART module', () => {
         })
 
         it('should throw an error for an invalid speed', () => {
-            assert.throws(() => { busPirate.uartSetSpeed(1234) }, /invalid speed sent to \.uartSetSpeed\(\)/)
+            assert.throws(() => { busPirate.uartSetBaudRate(1234) }, /invalid baudRate sent to \.uartSetBaudRate\(\)/)
         })
 
         it('should throw an error if no speed is sent', () => {
-            assert.throws(() => { busPirate.uartSetSpeed() }, /\.uartSetSpeed\(\) requires a speed parameter/)
+            assert.throws(() => { busPirate.uartSetBaudRate() }, /\.uartSetBaudRate\(\) requires a baudRate parameter/)
         })
 
         it('should send command byte corresponding to the chosen speed', (done) => {
             writeSpy = sinon.spy(busPirate.port, 'write')
-            busPirate.uartSetSpeed(300)
-            busPirate.uartSetSpeed(4800)
+            busPirate.uartSetBaudRate(300)
+            busPirate.uartSetBaudRate(4800)
 
             setTimeout(() => {
                 assert(writeSpy.firstCall.args[0] == 0x60, '0x60 was not written, got ' + writeSpy.firstCall.args[0])
@@ -139,15 +139,15 @@ describe('UART module', () => {
             }, 15)
         })
 
-        it('should fire a uart_speed_set event when sucessful', (done) => {
+        it('should fire a uart_baud_rate_set event when sucessful', (done) => {
             cbSpy = new sinon.spy()
 
-            busPirate.on('uart_speed_set', cbSpy)
-            busPirate.uartSetSpeed(4800)
+            busPirate.on('uart_baud_rate_set', cbSpy)
+            busPirate.uartSetBaudRate(4800)
             busPirate.port.fakeSuccessCode()
 
             setTimeout(() => {
-                assert(cbSpy.called, 'The uart_speed_set event handler was not called')
+                assert(cbSpy.called, 'The uart_baud_rate_set event handler was not called')
                 done()
             }, 15)
         })
