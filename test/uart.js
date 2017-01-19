@@ -46,7 +46,6 @@ describe('UART module', () => {
         })
 
         it('should write out an 0x03 to set UART mode', (done) => {
-
             busPirate.on('ready', () => {
                 writeSpy = sinon.spy(busPirate.port, 'write')
                 busPirate.uartInit()
@@ -120,9 +119,26 @@ describe('UART module', () => {
             }
         })
 
-        it('should throw an error for an invalid speed')
-        it('should throw an error if no speed is sent')
-        it('should send command byte corresponding to the chosen speed')
+        it('should throw an error for an invalid speed', () => {
+            assert.throws(() => { busPirate.uartSetSpeed(1234) }, /invalid speed sent to \.uartSetSpeed\(\)/)
+        })
+
+        it('should throw an error if no speed is sent', () => {
+            assert.throws(() => { busPirate.uartSetSpeed() }, /\.uartSetSpeed\(\) requires a speed parameter/)
+        })
+
+        it('should send command byte corresponding to the chosen speed', (done) => {
+            writeSpy = sinon.spy(busPirate.port, 'write')
+            busPirate.uartSetSpeed(300)
+            busPirate.uartSetSpeed(4800)
+
+            setTimeout(() => {
+                assert(writeSpy.firstCall.args[0] == 0x60, '0x60 was not written, got ' + writeSpy.firstCall.args[0])
+                assert(writeSpy.secondCall.args[0] == 0x63, '0x63 was not written, got ' + writeSpy.secondCall.args[0])
+                done()
+            }, 15)
+        })
+
         it('should fire a uart_speed_set event when sucessful')
     })
 })
