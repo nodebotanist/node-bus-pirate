@@ -139,6 +139,17 @@ describe('UART module', () => {
             }, 15)
         })
 
-        it('should fire a uart_speed_set event when sucessful')
+        it('should fire a uart_speed_set event when sucessful', (done) => {
+            cbSpy = new sinon.spy()
+
+            busPirate.on('uart_speed_set', cbSpy)
+            busPirate.uartSetSpeed(4800)
+            busPirate.port.fakeSuccessCode()
+
+            setTimeout(() => {
+                assert(cbSpy.called, 'The uart_speed_set event handler was not called')
+                done()
+            }, 15)
+        })
     })
 })
