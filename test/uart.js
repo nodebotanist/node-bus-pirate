@@ -152,4 +152,35 @@ describe('UART module', () => {
             }, 15)
         })
     })
+
+    describe('.uartConfig()', () => {
+        beforeEach((start) => {
+            busPirate = new BusPirate({
+                port: '/dev/tty.usbserial-xxxx'
+            })
+            stubPort(busPirate)
+            busPirate.on('ready', () => {
+                busPirate.on('uart_ready', start)
+                busPirate.uartInit()
+                busPirate.port.fakeReady()
+                busPirate.port.fakeUartReady()
+            })
+            busPirate.start()
+            busPirate.port.fakeReady()
+        })
+
+        afterEach(() => {
+            if (busPirate.port.write.restore) {
+                busPirate.port.write.restore()
+            }
+        })
+
+        it('Should assume the correct defaults if values are not sent')
+        it('Should set the pinout bit correctly')
+        it('Should set the dataBits bit correctly')
+        it('Should set the stopBits bit properly')
+        it('Should set the parity bit properly')
+        it('Should fire the uart_configured event when complete')
+
+    })
 })
