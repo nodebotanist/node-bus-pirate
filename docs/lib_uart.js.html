@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate_i2c.html#~event:i2c_configured">event:i2c_configured</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_complete">event:i2c_read_complete</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_data">event:i2c_read_data</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_error">event:i2c_read_error</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_start">event:i2c_read_start</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_ready">event:i2c_ready</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_write_complete">event:i2c_write_complete</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
+					<li><a href="module-BusPirate_i2c.html#~event:i2c_configured">event:i2c_configured</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_complete">event:i2c_read_complete</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_data">event:i2c_read_data</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_error">event:i2c_read_error</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_start">event:i2c_read_start</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_ready">event:i2c_ready</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_write_complete">event:i2c_write_complete</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li><li><a href="module-BusPirate_uart.html#~event:uart_ready">event:uart_ready</a></li><li><a href="module-BusPirate_uart.html#~event:uart_speed_set">event:uart_speed_set</a></li>
 				</ul>
 			</li>
 			
@@ -67,67 +67,120 @@
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
- * I2C module - adds I2C function calls to the BusPirate object
+ * UART module - adds uart function calls to the BusPirate object
  * @module BusPirate/uart
- * @author hannes-hochreiner
+ * @author hannes-hochreiner, nodebotanist
  */
+
+
+const async = require('async')
 
 let uart = {};
 
 /** Initialize UART
  * @method uartInit
+ * @fires uart_ready
  */
 uart.uartInit = function() {
-    console.log('starting UART');
+    this._uart = false
+    this.resetMode()
 
-    // Exit to bitbanging mode by sending 0x00.
-    // Enter UART mode by sending 0x03.
-    // The expected answer is "ART1".
-    this.port.write([0x00, 0x03]);
+    this.on('mode_reset', () => {
+        this.port.write([0x03]);
+
+        async.until(
+            () => this._uart,
+            (cb) => {
+                let message = this.inputQueue.fetchString(4)
+                if (message &amp;&amp; message == 'ART1') {
+                    this.inputQueue.flush()
+                    this._uart = true
+
+                    /**
+                     * uart_ready event - signals that the BusPirate is ready for I2C commands
+                     *
+                     * @event uart_ready
+                     */
+                    this.emit('uart_ready')
+                    cb()
+
+                    // check for accidental reset
+                } else if (message &amp;&amp; message == 'BBIO') {
+                    this.inputQueue.flush()
+                    this.port.write([0x03], () => { setTimeout(cb, 10) })
+                    this._uart = false
+                } else {
+                    setTimeout(cb, 10)
+                }
+            }
+        )
+    })
 };
 
-/** Set UART speed
- * @method uartSetSpeed
- * @param {Number} speed - 300 (default), 1200, 2400, 4800, 9600, 19200, 31250,
+/** Set UART Baud Rate
+ * @method uartSetBaudRate
+ * @param {Number} baudRate - 300, 1200, 2400, 4800, 9600, 19200, 31250,
  *                         38400, 57600, or 115200;
+ * @fires uart_baud_rate_set
  */
-uart.uartSetSpeed = function(speed) {
-    let speedByte = 0x60;
-
-    if (speed === 1200) {
-        speedByte |= 0x01;
-    } else if (speed === 2400) {
-        speedByte |= 0x02;
-    } else if (speed === 4800) {
-        speedByte |= 0x03;
-    } else if (speed === 9600) {
-        speedByte |= 0x04;
-    } else if (speed === 19200) {
-        speedByte |= 0x05;
-    } else if (speed === 31250) {
-        speedByte |= 0x06;
-    } else if (speed === 38400) {
-        speedByte |= 0x07;
-    } else if (speed === 57600) {
-        speedByte |= 0x08;
-    } else if (speed === 115200) {
-        speedByte |= 0x10;
+uart.uartSetBaudRate = function(baudRate) {
+    if (!baudRate) {
+        throw new Error('.uartSetBaudRate() requires a baudRate parameter')
+    }
+    const UART_BAUD_RATES = {
+        '300': 0x00,
+        '1200': 0x01,
+        '2400': 0x02,
+        '4800': 0x03,
+        '9600': 0x04,
+        '19200': 0x05,
+        '31250': 0x06,
+        '38400': 0x07,
+        '57600': 0x08,
+        '115200': 0x10
     }
 
-    this.port.write([speedByte])
+    if (!UART_BAUD_RATES[baudRate] &amp;&amp; UART_BAUD_RATES[baudRate] !== 0x00) {
+        throw new Error('invalid baudRate sent to .uartSetBaudRate()')
+    }
+
+    let baudRateByte = 0x60 | UART_BAUD_RATES[baudRate]
+
+    this.port.write([baudRateByte])
+
+    let done = false
+    async.until(
+        () => done,
+        (cb) => {
+            let message = this.inputQueue.fetchBytes(1)
+            if (message &amp;&amp; message[0] == 0x01) {
+                this.inputQueue.flush()
+                done = true
+
+                /**
+                 * This is an event emitted when I2C config is complete
+                 * @event uart_speed_set
+                 */
+                this.emit('uart_baud_rate_set')
+                cb()
+            } else {
+                setTimeout(cb, 10)
+            }
+        }
+    )
 }
 
 /** Configure UART
  * @method uartConfig
  * @param {Object} opts - Configuration object.
  * @param {String} opts.pinOutput - HiZ (default) or 3V3
- * @param {String} opts.databitsParity - 8/N (default), 8/E, 8/O, or 9/N
+ * @param {String} opts.dataBitsParity - 8/N (default), 8/E, 8/O, or 9/N
  * @param {Number} opts.stopBits - 1 (default) or 2
  * @param {String} opts.polarity - idleHigh (default) or idleLow
  */
 uart.uartConfig = function(opts) {
     if (typeof opts === "undefined") {
-        return;
+        opts = {}
     }
 
     let optByte = 0x80;
@@ -138,12 +191,12 @@ uart.uartConfig = function(opts) {
         }
     }
 
-    if (typeof opts.databitsParity !== "undefined") {
-        if (opts.databitsParity === "8/E") {
+    if (opts.dataBitsParity) {
+        if (opts.dataBitsParity === "8/E") {
             optByte |= 0x01 &lt;&lt; 2;
-        } else if (opts.databitsParity === "8/O") {
+        } else if (opts.dataBitsParity === "8/O") {
             optByte |= 0x02 &lt;&lt; 2;
-        } else if (opts.databitsParity === "9/N") {
+        } else if (opts.dataBitsParity === "9/N") {
             optByte |= 0x03 &lt;&lt; 2;
         }
     }
@@ -160,7 +213,28 @@ uart.uartConfig = function(opts) {
         }
     }
 
-    this.port.write([optByte]);
+    this.port.write([optByte])
+
+    let done = false
+    async.until(
+        () => done,
+        (cb) => {
+            let message = this.inputQueue.fetchBytes(1)
+            if (message &amp;&amp; message[0] == 0x01) {
+                this.inputQueue.flush()
+                done = true
+
+                /**
+                 * This is an event emitted when I2C config is complete
+                 * @event uart_speed_set
+                 */
+                this.emit('uart_configured')
+                cb()
+            } else {
+                setTimeout(cb, 10)
+            }
+        }
+    )
 };
 
 /** Set receive echo switch
@@ -267,7 +341,7 @@ module.exports = uart;</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 01-08-2017
+		on 01-20-2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

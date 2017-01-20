@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-BusPirate_i2c.html#~event:i2c_configured">event:i2c_configured</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_complete">event:i2c_read_complete</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_data">event:i2c_read_data</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_error">event:i2c_read_error</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_start">event:i2c_read_start</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_ready">event:i2c_ready</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_write_complete">event:i2c_write_complete</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li>
+					<li><a href="module-BusPirate_i2c.html#~event:i2c_configured">event:i2c_configured</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_complete">event:i2c_read_complete</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_data">event:i2c_read_data</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_error">event:i2c_read_error</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_read_start">event:i2c_read_start</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_ready">event:i2c_ready</a></li><li><a href="module-BusPirate_i2c.html#~event:i2c_write_complete">event:i2c_write_complete</a></li><li><a href="module-BusPirate.html#~event:ready">event:ready</a></li><li><a href="module-BusPirate_uart.html#~event:uart_ready">event:uart_ready</a></li><li><a href="module-BusPirate_uart.html#~event:uart_speed_set">event:uart_speed_set</a></li>
 				</ul>
 			</li>
 			
@@ -73,7 +73,7 @@
     <div class="container-overview">
     
         
-            <div class="description">I2C module - adds I2C function calls to the BusPirate object</div>
+            <div class="description">UART module - adds uart function calls to the BusPirate object</div>
         
 
         
@@ -100,7 +100,7 @@
 	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
 	<dd class="tag-author">
 		<ul>
-			<li>hannes-hochreiner</li>
+			<li>hannes-hochreiner, nodebotanist</li>
 			</ul>
 	</dd>
 	
@@ -266,7 +266,7 @@
 
         <tr>
             
-                <td class="name"><code>databitsParity</code></td>
+                <td class="name"><code>dataBitsParity</code></td>
             
 
             <td class="type">
@@ -383,7 +383,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="lib_uart.js.html">lib/uart.js</a>,
-				 <a href="lib_uart.js.html#sunlight-1-line-52">line 52</a>
+				 <a href="lib_uart.js.html#sunlight-1-line-105">line 105</a>
 			</li>
 		</ul>
 	</dd>
@@ -471,7 +471,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="lib_uart.js.html">lib/uart.js</a>,
-				 <a href="lib_uart.js.html#sunlight-1-line-9">line 9</a>
+				 <a href="lib_uart.js.html#sunlight-1-line-12">line 12</a>
 			</li>
 		</ul>
 	</dd>
@@ -487,6 +487,155 @@
 
     
 
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li><a href="module-BusPirate_uart.html#~event:uart_ready">event:uart_ready</a></li>
+    </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~uartSetBaudRate"><span class="type-signature">&lt;inner> </span>uartSetBaudRate(baudRate)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set UART Baud Rate
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>baudRate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">300, 1200, 2400, 4800, 9600, 19200, 31250,
+                        38400, 57600, or 115200;</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_uart.js.html">lib/uart.js</a>,
+				 <a href="lib_uart.js.html#sunlight-1-line-52">line 52</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li>event:uart_baud_rate_set</li>
+    </ul>
     
 
     
@@ -732,7 +881,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="lib_uart.js.html">lib/uart.js</a>,
-				 <a href="lib_uart.js.html#sunlight-1-line-113">line 113</a>
+				 <a href="lib_uart.js.html#sunlight-1-line-187">line 187</a>
 			</li>
 		</ul>
 	</dd>
@@ -871,146 +1020,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="lib_uart.js.html">lib/uart.js</a>,
-				 <a href="lib_uart.js.html#sunlight-1-line-98">line 98</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~uartSetSpeed"><span class="type-signature">&lt;inner> </span>uartSetSpeed(speed)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Set UART speed
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>speed</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">300 (default), 1200, 2400, 4800, 9600, 19200, 31250,
-                        38400, 57600, or 115200;</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="lib_uart.js.html">lib/uart.js</a>,
-				 <a href="lib_uart.js.html#sunlight-1-line-21">line 21</a>
+				 <a href="lib_uart.js.html#sunlight-1-line-172">line 172</a>
 			</li>
 		</ul>
 	</dd>
@@ -1148,7 +1158,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="lib_uart.js.html">lib/uart.js</a>,
-				 <a href="lib_uart.js.html#sunlight-1-line-148">line 148</a>
+				 <a href="lib_uart.js.html#sunlight-1-line-222">line 222</a>
 			</li>
 		</ul>
 	</dd>
@@ -1182,6 +1192,274 @@
 
     
 
+    
+        <h3 class="subsection-title">Events</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:uart_ready">uart_ready</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        uart_ready event - signals that the BusPirate is ready for I2C commands
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_uart.js.html">lib/uart.js</a>,
+				 <a href="lib_uart.js.html#sunlight-1-line-31">line 31</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:uart_speed_set">uart_speed_set</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This is an event emitted when I2C config is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_uart.js.html">lib/uart.js</a>,
+				 <a href="lib_uart.js.html#sunlight-1-line-159">line 159</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~event:uart_speed_set">uart_speed_set</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        This is an event emitted when I2C config is complete
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="lib_uart.js.html">lib/uart.js</a>,
+				 <a href="lib_uart.js.html#sunlight-1-line-92">line 92</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
     
 </article>
 
@@ -1218,7 +1496,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 01-08-2017
+		on 01-20-2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
