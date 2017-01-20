@@ -175,12 +175,93 @@ describe('UART module', () => {
             }
         })
 
-        it('Should assume the correct defaults if values are not sent')
-        it('Should set the pinout bit correctly')
-        it('Should set the dataBits bit correctly')
-        it('Should set the stopBits bit properly')
-        it('Should set the parity bit properly')
-        it('Should fire the uart_configured event when complete')
+        it('Should assume the correct defaults if values are not sent', (done) => {
+            writeSpy = sinon.spy(busPirate.port, 'write')
+            busPirate.uartConfig()
+            busPirate.uartConfig({})
 
+            setTimeout(() => {
+                assert(writeSpy.firstCall.args[0] == 0x80, '0x80 was not written, got ' + writeSpy.firstCall.args[0])
+                assert(writeSpy.secondCall.args[0] == 0x80, '0x80 was not written, got ' + writeSpy.secondCall.args[0])
+                done()
+            }, 15)
+        })
+
+        it('Should set the pinOut bit correctly', (done) => {
+            writeSpy = sinon.spy(busPirate.port, 'write')
+            busPirate.uartConfig({
+                pinOutput: '3V3'
+            })
+
+            setTimeout(() => {
+                assert(writeSpy.firstCall.args[0] == 0x90, '0x90 was not written, got ' + writeSpy.firstCall.args[0])
+                done()
+            }, 15)
+        })
+
+        it('Should set the dataBitsParity bit correctly', (done) => {
+            writeSpy = sinon.spy(busPirate.port, 'write')
+            busPirate.uartConfig({
+                dataBitsParity: '8/E'
+            })
+            busPirate.uartConfig({
+                dataBitsParity: '8/O'
+            })
+            busPirate.uartConfig({
+                dataBitsParity: '9/N'
+            })
+
+            setTimeout(() => {
+                assert(writeSpy.firstCall.args[0] == 0x84, '0x84 was not written, got ' + writeSpy.firstCall.args[0])
+                assert(writeSpy.secondCall.args[0] == 0x88, '0x85 was not written, got ' + writeSpy.secondCall.args[0])
+                assert(writeSpy.thirdCall.args[0] == 0x8C, '0x86 was not written, got ' + writeSpy.thirdCall.args[0])
+                done()
+            }, 15)
+        })
+
+        it('Should set the stopBits bit properly', (done) => {
+            writeSpy = sinon.spy(busPirate.port, 'write')
+            busPirate.uartConfig({
+                stopBits: 1
+            })
+            busPirate.uartConfig({
+                stopBits: 2
+            })
+
+            setTimeout(() => {
+                assert(writeSpy.firstCall.args[0] == 0x80, '0x80 was not written, got ' + writeSpy.firstCall.args[0])
+                assert(writeSpy.secondCall.args[0] == 0x82, '0x82 was not written, got ' + writeSpy.secondCall.args[0])
+                done()
+            }, 15)
+        })
+
+        it('Should set the polarity bit properly', (done) => {
+            writeSpy = sinon.spy(busPirate.port, 'write')
+            busPirate.uartConfig({
+                polarity: 'idleHigh'
+            })
+            busPirate.uartConfig({
+                polarity: 'idleLow'
+            })
+
+            setTimeout(() => {
+                assert(writeSpy.firstCall.args[0] == 0x80, '0x80 was not written, got ' + writeSpy.firstCall.args[0])
+                assert(writeSpy.secondCall.args[0] == 0x81, '0x81 was not written, got ' + writeSpy.secondCall.args[0])
+                done()
+            }, 15)
+        })
+
+        it('Should fire the uart_configured event when complete', () => {
+            cbSpy = new sinon.spy()
+
+            busPirate.on('uart_configured', cbSpy)
+            busPirate.uartSetBaudRate(4800)
+            busPirate.port.fakeSuccessCode()
+
+            setTimeout(() => {
+                assert(cbSpy.called, 'The uart_configured event handler was not called')
+                done()
+            }, 15)
+        })
     })
 })
